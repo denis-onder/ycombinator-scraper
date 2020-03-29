@@ -12,24 +12,25 @@ func find(_ int, element *goquery.Selection) {
 	index := element.Find(".rank").Text()
 	title := titleElement.Text()
 	link, _ := titleElement.Attr("href")
-	fmt.Println(index, title, "\n", link, "\n")
+	fmt.Println(index, title, "\n", link)
+
 }
 
-func scrape() (error, bool) {
+func scrape() (bool, error) {
 	const url = "https://news.ycombinator.com/"
 	res, err := http.Get(url)
 	if err != nil {
-		return err, false
+		return false, err
 	}
 	defer res.Body.Close()
 
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 
 	if err != nil {
-		return err, false
+		return false, err
 	}
 
 	doc.Find(".athing").Each(find)
 
-	return nil, true
+	return true, nil
 }
